@@ -1,12 +1,11 @@
 # factores
 Welcome to **factores**, an **open source** music bot that scopes to work with **official api's** from <a href="www.youtube.com" target="_blank">Youtube</a>, or <a href="www.spotify.com" target="_blank">Spotify</a>,<br>
-and build a community around it, to encourage **junior .js** programmers to dive into the code, and test what they can do.<br>
+and build a community around it, to encourage **junior .js** programmers to dive into the code, and test with it.<br><br>
 We're working on a Discord server to bring **full time suport service**.<br><br>
 We also accept suggests in order add **new functionalities**, or **improve** the current ones.
 <br><br>
-The bot is currently being hosted on a personal vps.
-
-**Click** <a href="https://discord.com/api/oauth2/authorize?client_id=930458539636453417&permissions=8&scope=bot" target="_blank">**here**</a> to invite 'factores' to your server.
+The bot is currently being hosted on a personal vps.<br><br>
+- **Click** <a href="https://discord.com/api/oauth2/authorize?client_id=930458539636453417&permissions=8&scope=bot" target="_blank">**here**</a> to invite **factores** to your server.
 <br><br>
 
 ## ubuntu - setup vscode
