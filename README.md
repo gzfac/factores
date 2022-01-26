@@ -4,9 +4,21 @@ and build a community around it, to encourage **junior .js** programmers to dive
 We're working on a Discord server to bring **full time suport service**.<br><br>
 We also accept suggests in order add **new functionalities**, or **improve** the current ones.
 <br><br>
-The bot is currently being hosted on a personal vps.<br><br>
-- **Click** <a href="https://discord.com/api/oauth2/authorize?client_id=930458539636453417&permissions=8&scope=bot" target="_blank">**here**</a> to invite **factores** to your server.
-<br><br>
+The bot is currently being hosted on a personal vps.<br>
+
+# usage
+- **Click** <a href="https://discord.com/api/oauth2/authorize?client_id=930458539636453417&permissions=8&scope=bot" target="_blank">**here**</a> to invite **factores** to your server. <br>
+
+*Remind that you have to enter a voice channel in order to use factores*
+
+## commands
+Factores uses **! prefix** to read it's commands.
+
+**Avaliable commands:**
+- **!h** ~ This will prompt the **help embed** of factores
+- **!p <URL_youtube_video>** ~ This will add the song to the queue or play it if it's not already playing a song
+- **!s** ~ This will skip the current song and play next one in queue
+- **!w** ~ This will disconnect the bot from the voice channel
 
 ## ubuntu - setup vscode
 All tutorials were tested on both Ubuntu 20.04 and 18.04 system versions.
