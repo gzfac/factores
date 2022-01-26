@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
-const {prefix, token} = require('./config.json');
+const { prefix, token } = require('./config.json');
 const ytdl = require('ytdl-core');
+const YTAPI = require('./ytapi.js')
 
 const client = new Discord.Client();
 
@@ -27,7 +28,7 @@ client.once('disconnect', () => {
 client.on('message', async message => {
 
     if (message.author.bot) return;
-    if(!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix)) return;
 
     const serverQueue = queue.get(message.guild.id);
 
@@ -45,13 +46,14 @@ client.on('message', async message => {
 
         stop(message, serverQueue);
         return;
-    
-    } else if (message.content.startsWith(`${prefix}h`)){
+
+
+    } else if (message.content.startsWith(`${prefix}h`)) {
 
         help(message)
         return;
 
-    }else {
+    } else {
 
         message.channel.send("Tu comando fue dodgeado..");
 
@@ -61,11 +63,15 @@ client.on('message', async message => {
 
 async function execute(message, serverQueue) {
 
-    const args = message.content.split(" ");
+
+
+    let video = await YTAPI.retornarVideo(message);
+
+    const args = video.url;
 
     const voiceChannel = message.member.voice.channel;
 
-    if(!voiceChannel){
+    if (!voiceChannel) {
 
         return message.channel.send("Metete a un canal de voz forro");
 
@@ -79,7 +85,7 @@ async function execute(message, serverQueue) {
 
     }
 
-    const songInfo = await ytdl.getInfo(args[1]);
+    const songInfo = await ytdl.getInfo(args);
 
     const song = {
         title: songInfo.videoDetails.title,
@@ -103,7 +109,7 @@ async function execute(message, serverQueue) {
 
         queueContruct.songs.push(song);
 
-        try{
+        try {
 
             var connection = await voiceChannel.join();
             queueContruct.connection = connection;
@@ -128,11 +134,11 @@ async function execute(message, serverQueue) {
 
 }
 
-function play(guild, song){
+function play(guild, song) {
 
     const serverQueue = queue.get(guild.id);
 
-    if(!song) {
+    if (!song) {
 
         serverQueue.voiceChannel.leave();
         queue.delete(guild.id);
@@ -154,13 +160,13 @@ function play(guild, song){
 
 function skip(message, serverQueue) {
 
-    if(!message.member.voice.channel){
+    if (!message.member.voice.channel) {
 
         return message.channel.send("Entra al canal pa skipear..");
 
     }
 
-    if(!serverQueue){
+    if (!serverQueue) {
 
         return message.channel.send("No se esta reproduciendo nada tontin..")
 
@@ -172,13 +178,13 @@ function skip(message, serverQueue) {
 
 function stop(message, serverQueue) {
 
-    if(!message.member.voice.channel){
+    if (!message.member.voice.channel) {
 
         return message.channel.send("Metete al canal para stopear bobina..")
 
     }
 
-    if(!serverQueue){
+    if (!serverQueue) {
 
         return message.channel.send("No hay musica lastre..")
 
@@ -189,24 +195,35 @@ function stop(message, serverQueue) {
 
 }
 
-function help(message){
+function mensaje(video) {
+    const embed = new Discord.MessageEmbed()
+        .setTitle('Sonando....')
+        .setColor('#34eb86')
+        .addField('Titulo', video.titulo)
+        .addField('Url', video.url)
+        .setThumbnail(video.thumbnail);
+    message.channel.send(embed);
+}
+
+function help(message) {
 
     const embed = new Discord.MessageEmbed()
-    .setTitle('\:snowflake: Factores -> Lista de comandos')
-    .setColor('#34eb86')
-    .addField('Agregar cancion a la cola: ', '!p <URL>', false)
-    .addField('Saltearse una cancion: ', '!s', false)
-    .addField('Desconectarse: ', '!w', false)
-    .setAuthor('derrapante de hiperlus', 'https://cdn.discordapp.com/avatars/483947449891815459/79fe719bce37b660825d7d51688fd87f.webp?size=80', 'https://github.com/gzfac')
-    .setDescription('Factores, es un bot musical, de código abierto, que funciona a través de las api oficiales tanto de YouTube, como de Spotify. Repositorio publico: https://github.com/gzfac/factores')
-    .setFooter('Todos los links, llevaran a los perfiles oficiales de GitHub')
-    .setImage('https://www.cashadvance6online.com/data/archive/img/1621168033.gif')
-    .setURL('https://github.com/gzfac/factores')
-    .setThumbnail('https://assets1.ello.co/uploads/asset/attachment/6816497/ello-optimized-7826599c.gif')
-    .setTimestamp()
+        .setTitle('\:snowflake: Factores -> Lista de comandos')
+        .setColor('#34eb86')
+        .addField('Agregar cancion a la cola: ', '!p <URL>', false)
+        .addField('Saltearse una cancion: ', '!s', false)
+        .addField('Desconectarse: ', '!w', false)
+        .setAuthor('derrapante de hiperlus', 'https://cdn.discordapp.com/avatars/483947449891815459/79fe719bce37b660825d7d51688fd87f.webp?size=80', 'https://github.com/gzfac')
+        .setDescription('Factores, es un bot musical, de código abierto, que funciona a través de las api oficiales tanto de YouTube, como de Spotify. Repositorio publico: https://github.com/gzfac/factores')
+        .setFooter('Todos los links, llevaran a los perfiles oficiales de GitHub')
+        .setImage('https://www.cashadvance6online.com/data/archive/img/1621168033.gif')
+        .setURL('https://github.com/gzfac/factores')
+        .setThumbnail('https://assets1.ello.co/uploads/asset/attachment/6816497/ello-optimized-7826599c.gif')
+        .setTimestamp()
 
     message.channel.send(embed);
 
 }
+
 
 client.login(token);
