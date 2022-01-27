@@ -1,10 +1,12 @@
 {
   "dependencies": {
     "@discordjs/opus": "^0.7.0",
+    "discord-music-player": "^8.3.1",
     "discord.js": "^12.5.3",
     "ffmpeg": "^0.0.4",
     "ffmpeg-static": "^4.4.1",
     "fluent-ffmpeg": "^2.1.2",
+    "spotify-web-api-node": "^5.0.2",
     "ytdl-core": "^4.10.0"
   }
 }

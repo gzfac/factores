@@ -1,14 +1,25 @@
 const Discord = require('discord.js');
+const { Intents } = require('discord.js')
 const {prefix, token} = require('./config.json');
 const ytdl = require('ytdl-core');
+const { Player } =  require('discord-music-player');
+const { RepeatMode } = require('discord-music-player');
+const client = new Discord.Client({
 
-const client = new Discord.Client();
+    intents: [ Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]
 
+});  
+const com = new Discord.MessageEmbed()
+
+//const SpotifyWebApi = require('spotify-web-api-node');      
+
+const constantQueue = [];
 const queue = new Map();
 
 client.once('ready', () => {
 
     console.log("La hiperlus se aproxima..");
+    setupDefaultChannel();
 
 });
 
@@ -29,7 +40,10 @@ client.on('message', async message => {
     if (message.author.bot) return;
     if(!message.content.startsWith(prefix)) return;
 
+    const args = message.content.split(' ');
     const serverQueue = queue.get(message.guild.id);
+
+    message.delete().then( msg => `Se borro el mensaje de: ${msg.author.username}`);
 
     if (message.content.startsWith(`${prefix}p`)) {
 
@@ -43,6 +57,7 @@ client.on('message', async message => {
 
     } else if (message.content.startsWith(`${prefix}w`)) {
 
+        guildQueue.stop();
         stop(message, serverQueue);
         return;
     
@@ -51,7 +66,13 @@ client.on('message', async message => {
         help(message)
         return;
 
-    }else {
+    } else if (message.content.startsWith(`${prefix}setup`)){
+
+        setupDefaultChannel(message)
+        return;
+
+
+    } else {
 
         message.channel.send("Tu comando fue dodgeado..");
 
@@ -83,7 +104,7 @@ async function execute(message, serverQueue) {
 
     const song = {
         title: songInfo.videoDetails.title,
-        url: songInfo.videoDetails.video_url
+        url: songInfo.videoDetails.video_url,
     }
 
     if (!serverQueue) {
@@ -108,21 +129,26 @@ async function execute(message, serverQueue) {
             var connection = await voiceChannel.join();
             queueContruct.connection = connection;
 
+            constantQueue.push(song)
+            showQueue(message, message.channel);
             play(message.guild, queueContruct.songs[0])
 
         } catch (e) {
 
             console.log(e);
             queue.delete(message.guild.id);
-            return message.channel.send(e);
+
+            let errEmbed = Discord.MessageEmbed().setTitle("La cancion ingresada no existe..");
+
+            return message.channel.send(errEmbed);
 
         }
 
     } else {
 
-        serverQueue.songs.push(song);
+        constantQueue.push(song)
         console.log(serverQueue.songs);
-        return message.channel.send(`${song.title} ya viene, no seas bobi`);
+        showQueue(message, message.channel);
 
     }
 
@@ -147,8 +173,9 @@ function play(guild, song){
 
     }).on("error", error => console.error(error));
 
+    console.log(song)
+
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`Arrancandungui: ${song.title}`);
 
 }
 
@@ -182,7 +209,7 @@ function stop(message, serverQueue) {
 
         return message.channel.send("No hay musica lastre..")
 
-    }
+    }z
 
     serverQueue.songs = [];
     serverQueue.connection.dispatcher.end();
@@ -206,6 +233,49 @@ function help(message){
     .setTimestamp()
 
     message.channel.send(embed);
+
+}
+
+function showQueue(message, channel){
+
+    let showEmbed = new Discord.MessageEmbed().setTitle('\:banjo: Lista de canciones: ')
+
+    constantQueue.forEach((element, index) => {
+      
+        showEmbed.addField(index + 1 + ". " + element.title, 'URL: ' + element.url)
+
+    });
+
+    a = channel.messages.fetch({ limit: 100 }).then(messages => {
+
+        messages.forEach(message => message.delete());
+
+    }).catch( err => console.log('No hay mensajes para borrar'));
+
+    console.log(a)
+    message.channel.send(showEmbed)
+
+}
+
+function setupDefaultChannel(message){
+
+    let factoresChannel = client.channels.cache.get('factores');
+    
+    if(!factoresChannel){
+
+        client.channels.create('factores', {
+
+            type: "text",
+
+            permissionOverwrites: [
+                {
+                  allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
+                }
+             ],
+            
+        })
+
+    }
 
 }
 
