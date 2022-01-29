@@ -1,5 +1,5 @@
 # factores
-Welcome to **factores**, an **open source Discord music bot** that scopes to work with **official api's** from <a href="www.youtube.com" target="_blank">Youtube</a>, or <a href="www.spotify.com" target="_blank">Spotify</a>, and build a community around it, to encourage **junior .js** programmers to dive into the code, and test with it.<br><br>
+Welcome to **factores**, an **open source Discord music bot** that scopes to work with **official api** of <a href="www.youtube.com" target="_blank">Youtube</a>, and build a community around it, to encourage **junior .js** programmers to dive into the code, and test with it.<br><br>
 We're working on a Discord server to bring **full time suport service**.<br><br>
 We also accept suggests in order add **new functionalities**, or **improve** the current ones.
 <br><br>
