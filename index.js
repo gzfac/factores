@@ -28,12 +28,12 @@ client.once('disconnect', () => {
 client.on('message', async message => {
 
     if (message.author.bot) return;
-    if(!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix)) return;
 
     const args = message.content.split(' ');
     const serverQueue = queue.get(message.guild.id);
 
-    message.delete().then( msg => `Se borro el mensaje de: ${msg.author.username}`);
+    message.delete().then(msg => `Se borro el mensaje de: ${msg.author.username}`);
 
     if (message.content.startsWith(`${prefix}p`)) {
 
@@ -49,8 +49,8 @@ client.on('message', async message => {
 
         cmd.stop(message, serverQueue);
         return;
-    
-    } else if (message.content.startsWith(`${prefix}h`)){
+
+    } else if (message.content.startsWith(`${prefix}h`)) {
 
         cmd.help(message)
         return;
